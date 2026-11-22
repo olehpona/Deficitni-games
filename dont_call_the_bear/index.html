@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DON'T CALL THE BEARS</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <!-- CRT сканлайни та віньєтка поверх усього -->
+      <div class="crt-overlay" aria-hidden="true"></div>
+
+      <!-- ГОЛОВНЕ МЕНЮ (FNaF-стиль з bg_menu.jpg) -->
+      <section id="screen-menu" class="screen screen-menu active">
+        <div class="menu-bg-photo" aria-hidden="true"></div>
+        <div class="menu-vignette" aria-hidden="true"></div>
+
+        <div class="menu-layout">
+          <div class="menu-left">
+            <div class="cam-stamp">● REC // CAM_00</div>
+            <h1 class="game-title">
+              DON'T<br />
+              CALL THE<br />
+              <span>BEARS</span>
+            </h1>
+
+            <div class="menu-nav">
+              <button id="btn-start-game" class="fnaf-menu-btn primary">
+                <span class="cursor">&gt;&gt;</span> ПОЧАТИ НІЧ
+              </button>
+              <button id="btn-how-to-play" class="fnaf-menu-btn">
+                <span class="cursor">&gt;&gt;</span> ЯК ВИЖИТИ
+              </button>
+              <button id="btn-open-assets-menu" class="fnaf-menu-btn">
+                <span class="cursor">&gt;&gt;</span> АСЕТИ ТА ЗВУКИ
+              </button>
+            </div>
+
+            <div class="night-selector">
+              <div id="night-buttons" class="night-buttons"></div>
+            </div>
+          </div>
+
+          <div class="menu-right-meta">
+            <div>↑/↓ + ENTER</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ЕКРАН ПЕРЕДІСТОРІЇ (СЛАЙДШОУ) -->
+      <section id="screen-intro" class="screen screen-intro">
+        <div class="intro-stage">
+          <img id="intro-img-a" class="intro-slide active" alt="" />
+          <img id="intro-img-b" class="intro-slide" alt="" />
+          <div class="intro-vignette" aria-hidden="true"></div>
+        </div>
+        <div class="intro-hud">
+          <p id="intro-caption" class="intro-caption"></p>
+          <div class="intro-controls">
+            <div id="intro-dots" class="intro-dots"></div>
+            <button id="btn-skip-intro" class="btn btn-outline">[SPACE / ESC] ПРОПУСТИТИ &gt;&gt;</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ІГРОВИЙ ЕКРАН -->
+      <section id="screen-game" class="screen screen-game">
+        <!-- Верхній HUD -->
+        <header class="hud-top">
+          <div class="hud-cluster">
+            <div class="hud-rec"><span class="rec-dot"></span> REC</div>
+            <div class="hud-pill">
+              <span class="hud-label">ЗМІНА</span>
+              <strong id="hud-night-title">НІЧ 1</strong>
+            </div>
+          </div>
+
+          <div class="hud-meters">
+            <div class="meter-box" id="meter-nausea-box">
+              <div class="meter-head">
+                <span>НУДОТА</span>
+                <strong id="hud-nausea-val">18%</strong>
+              </div>
+              <div class="meter-track">
+                <div id="hud-nausea-bar" class="meter-fill meter-nausea"></div>
+              </div>
+            </div>
+
+            <div class="meter-box">
+              <div class="meter-head">
+                <span>ЛІХТАР</span>
+                <strong id="hud-battery-val">100%</strong>
+              </div>
+              <div class="meter-track">
+                <div id="hud-battery-bar" class="meter-fill meter-battery"></div>
+              </div>
+            </div>
+
+            <div class="meter-box meter-box-sm">
+              <div class="meter-head">
+                <span>ШУМ</span>
+                <strong id="hud-noise-val">Тихо</strong>
+              </div>
+              <div class="meter-track">
+                <div id="hud-noise-bar" class="meter-fill meter-noise"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-cluster">
+            <div class="hud-clock">
+              <strong id="hud-clock-value">00:00</strong>
+              <span class="hud-label">/ 06:00 AM</span>
+            </div>
+            <button id="btn-mute" class="btn btn-icon" title="Звук">🔊</button>
+            <button id="btn-open-assets-game" class="btn btn-icon" title="Асети та налаштування">
+              ⚙
+            </button>
+            <button id="btn-pause" class="btn btn-icon" title="Пауза [Esc]">⏸</button>
+          </div>
+        </header>
+
+        <!-- Сцена Canvas + оверлеї -->
+        <main class="stage-wrap">
+          <canvas id="game-canvas" width="1280" height="720"></canvas>
+
+          <div id="audio-cues-layer" class="audio-cues-layer"></div>
+
+          <button id="btn-turn-left" class="turn-arrow turn-left" title="Наліво [A / ←]">◀</button>
+          <button id="btn-turn-right" class="turn-arrow turn-right" title="Направо [D / →]">▶</button>
+
+          <div id="sober-badge" class="sober-badge hidden">
+            РОЗСІЛ АКТИВНИЙ: <span id="sober-timer">15</span>с
+          </div>
+        </main>
+
+        <!-- Нижній HUD: камери/кімнати + дії -->
+        <footer class="hud-bottom">
+          <div id="room-nav" class="room-nav">
+            <button class="room-btn" data-room="door">[1] ДВЕРІ</button>
+            <button class="room-btn" data-room="windows">[2] ВІТАЛЬНЯ</button>
+            <button class="room-btn" data-room="chimney">[3] КАМІН</button>
+            <button class="room-btn" data-room="bathroom">[4] УНІТАЗ</button>
+          </div>
+
+          <div class="action-bar">
+            <button id="btn-flashlight" class="btn btn-action">[F] ЛІХТАРИК</button>
+            <button id="btn-brine-quick" class="btn btn-action">
+              [R] РОЗСІЛ (<span id="brine-count">3</span>)
+            </button>
+            <div id="room-actions" class="room-actions"></div>
+          </div>
+        </footer>
+      </section>
+
+      <!-- ВХІДНА МОДАЛКА ДЛЯ АКТИВАЦІЇ ЗВУКУ -->
+      <div id="modal-entry" class="modal modal-entry">
+        <div class="modal-card modal-sm modal-entry-card">
+          <div class="result-badge">// УВАГА // ПІДКЛЮЧЕННЯ ЗВУКУ</div>
+          <h2>DON'T CALL THE BEARS</h2>
+          <p>Для повної атмосфери увімкни звук.</p>
+          <div class="modal-stack">
+            <button id="btn-enter-game" class="btn btn-primary btn-entry">&gt;&gt; УВІЙТИ В ХАТИНУ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- МОДАЛКА: ЯК ГРАТИ -->
+      <div id="modal-help" class="modal hidden">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h2>// ІНСТРУКЦІЯ ВИЖИВАННЯ ДО 06:00</h2>
+            <button class="btn btn-icon" data-close-modal="modal-help">✕</button>
+          </div>
+          <div class="modal-body help-grid">
+            <div class="help-item">
+              <h3>CAM 01: Вхідні двері [1]</h3>
+              <p>
+                Чуєш кроки чи деренчання ручки — біжи до дверей і <strong>ЗАТИСНИ «Тримати засув»</strong>
+                (<kbd>Space</kbd> або мишкою по дверях), доки ведмідь не відступить.
+              </p>
+            </div>
+            <div class="help-item">
+              <h3>CAM 02: Вітальня [2]</h3>
+              <p>
+                <strong>Ліве вікно:</strong> світи ліхтариком <kbd>F</kbd>, коли підглядає. Якщо вже лізе —
+                бий <strong>Сковорідкою</strong> <kbd>Q</kbd>!<br />
+                <strong>Праве вікно:</strong> пшикай <strong>Перцевим балончиком</strong> <kbd>E</kbd>.
+              </p>
+            </div>
+            <div class="help-item">
+              <h3>CAM 03: Камін [3]</h3>
+              <p>
+                Коли сиплеться сажа або в топці вже ведмідь — натискай <strong>«Розпалити дим»</strong>.
+                Вогонь вижене ведмедя і заблокує димар на 4 секунди.
+              </p>
+            </div>
+            <div class="help-item">
+              <h3>CAM 04: Керамічний друг [4]</h3>
+              <p>
+                При <strong>100%</strong> нудоти ти мимоволі покличеш усіх ведмедів!
+                У вбиральні затискай <strong>«Тихо»</strong> або ризикуй <strong>«Швидко (Гучно!)»</strong>.
+                Банки <strong>розсолу</strong> <kbd>R</kbd> миттєво знімають 35% нудоти.
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <span class="controls-hint">
+              <kbd>1-4</kbd> камери · <kbd>A/D</kbd> огляд · <kbd>F</kbd> ліхтар ·
+              <kbd>Space</kbd> дія · <kbd>Q</kbd> сковорідка · <kbd>E</kbd> балончик · <kbd>R</kbd> розсіл
+            </span>
+            <button class="btn btn-primary" data-close-modal="modal-help">ЗРОЗУМІЛО</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- МОДАЛКА: ПАУЗА -->
+      <div id="modal-pause" class="modal hidden">
+        <div class="modal-card modal-sm">
+          <h2>// ПАУЗА</h2>
+          <p>Запис призупинено. Ведмеді чекають у темряві.</p>
+          <div class="modal-stack">
+            <button id="btn-resume" class="btn btn-primary">ПРОДОВЖИТИ</button>
+            <button id="btn-open-assets-pause" class="btn btn-secondary">АСЕТИ / НАЛАШТУВАННЯ</button>
+            <button id="btn-pause-menu" class="btn btn-outline">ВИЙТИ В МЕНЮ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- МОДАЛКА: GAME OVER -->
+      <div id="modal-gameover" class="modal hidden">
+        <div class="modal-card modal-sm modal-danger">
+          <div class="result-badge">// SIGNAL LOST // ДО 06:00 НЕ ДОТЯГНУВ</div>
+          <h2>Та ведмідь не є злий!<br />Він вам приніс закарпатське</h2>
+          <p id="gameover-killer" class="result-killer"></p>
+          <p id="gameover-tip" class="result-tip"></p>
+          <div class="modal-stack">
+            <button id="btn-retry-night" class="btn btn-primary">ЩЕ РАЗ</button>
+            <button id="btn-gameover-menu" class="btn btn-outline">У ГОЛОВНЕ МЕНЮ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- МОДАЛКА: ПЕРЕМОГА -->
+      <div id="modal-victory" class="modal hidden">
+        <div class="modal-card modal-sm modal-success">
+          <div class="result-badge">// 06:00 AM // СВІТАНОК</div>
+          <h2>ТИ ВИЖИВ!</h2>
+          <p>Ведмеді пішли в ліс. Можна нарешті випити розсолу.</p>
+          <div id="victory-stats" class="victory-stats"></div>
+          <div class="modal-stack">
+            <button id="btn-next-night" class="btn btn-primary">НАСТУПНА НІЧ</button>
+            <button id="btn-victory-menu" class="btn btn-outline">У ГОЛОВНЕ МЕНЮ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- МОДАЛКА: МЕНЕДЖЕР АСЕТІВ -->
+      <div id="modal-assets" class="modal hidden">
+        <div class="modal-card modal-wide">
+          <div class="modal-header">
+            <div>
+              <h2>// МЕНЕДЖЕР АСЕТІВ ТА АУДІО</h2>
+              <p class="modal-sub">
+                Завантажуй файли для тесту прямо в браузері або підключай у <code>assets/manifest.js</code>.
+              </p>
+            </div>
+            <button class="btn btn-icon" data-close-modal="modal-assets">✕</button>
+          </div>
+
+          <div class="settings-toggles">
+            <label class="toggle-item">
+              <input type="checkbox" id="toggle-placeholder-tags" checked />
+              <span>Показувати підписи заглушок (якщо асет не завантажено)</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="toggle-audio-cues" checked />
+              <span>Показувати текстові підказки звуків</span>
+            </label>
+          </div>
+
+          <div class="asset-tabs">
+            <button class="asset-tab active" data-tab="images">ЗОБРАЖЕННЯ (<span id="count-images">0</span>)</button>
+            <button class="asset-tab" data-tab="audio">АУДІО (<span id="count-audio">0</span>)</button>
+          </div>
+
+          <div id="asset-list-container" class="asset-list-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

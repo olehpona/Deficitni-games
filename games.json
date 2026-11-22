@@ -1,0 +1,67 @@
+{
+  "hallName": "ДЕФІЦИТНІ ІГРИ",
+  "tagline": "Підпільний архів мемних катриджів. Тираж обмежений.",
+  "games": [
+    {
+      "id": "dont-call-the-bear",
+      "serial": "DEF-001",
+      "title": "DON'T CALL THE BEARS",
+      "shortTitle": "DON'T CALL THE BEARS",
+      "folder": "dont_call_the_bear",
+      "entry": "index.html",
+      "previewImage": "/games/dont_call_the_bear/assets/images/bg_menu.webp",
+      "genre": "SURVIVAL HORROR",
+      "year": "2026",
+      "players": "1P",
+      "accentColor": "#e53935",
+      "shellColor": "#1f2228",
+      "description": "Дмитро після файної пʼянки залишився сам і вирішив покликати ведмедів. Проблема в тому, що ведмеді справді почули. Тепер треба якось дожити до 6 ранку.",
+      "controls": "Миша • ↑/↓ + Enter • Space",
+      "badge": "ВИПУСК #01",
+      "published": true
+    },
+    {
+      "id": "vyzheny-z-kimnaty",
+      "serial": "DEF-002",
+      "title": "Вижени з кімнати",
+      "shortTitle": "Вижени з кімнати",
+      "externalUrl": "https://remarkable-travesseiro-b6ba7c.netlify.app/",
+      "previewImage": "https://remarkable-travesseiro-b6ba7c.netlify.app/assets/scenes/menu.jpg",
+      "genre": "БОКС",
+      "year": "2026",
+      "players": "1P",
+      "accentColor": "#2e7d32",
+      "shellColor": "#222428",
+      "description": "Ти граєш за Олега, який просто хотів спокійно подивитись мультфільм, але пʼяні кенти постійно відволікають. Тепер у тебе почався бокс за краплю тиші.",
+      "published": true
+    },
+    {
+      "id": "saber-duel",
+      "serial": "DEF-003",
+      "title": "Saber Duel",
+      "shortTitle": "Saber Duel",
+      "externalUrl": "https://zesty-marigold-5292e8.netlify.app/",
+      "previewImage": "https://zesty-marigold-5292e8.netlify.app/assets/splash_menu.jpg",
+      "genre": "ДУЕЛЬ",
+      "year": "2026",
+      "players": "1P / 2P",
+      "accentColor": "#1e88e5",
+      "shellColor": "#222428",
+      "description": "Дуель на світлових мечах, де ти граєш за сітха Захара або джедая Тараса.",
+      "published": true
+    },
+    {
+      "id": "spasty-ryadovogo-vasyu",
+      "serial": "DEF-004",
+      "title": "Спасти рядового Васю",
+      "shortTitle": "Спасти рядового Васю",
+      "genre": "ПРИГОДИ",
+      "year": "2026",
+      "players": "1P",
+      "accentColor": "#f59e0b",
+      "shellColor": "#222428",
+      "description": "Вася знову затільтував. Але світ не проіснує без свого героя. Поїдь в Галич і поверни Васю з тільта.",
+      "published": true
+    }
+  ]
+}
