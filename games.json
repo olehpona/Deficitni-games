@@ -51,16 +51,21 @@
       "published": true
     },
     {
-      "id": "spasty-ryadovogo-vasyu",
+      "id": "vratuvatu-ryadovogo-vasyu",
       "serial": "DEF-004",
-      "title": "Спасти рядового Васю",
-      "shortTitle": "Спасти рядового Васю",
-      "genre": "ПРИГОДИ",
+      "title": "Врятувати рядового Васю",
+      "shortTitle": "Врятувати рядового Васю",
+      "folder": "vratuvatu_ryadovogo_vasyu",
+      "entry": "index.html",
+      "previewImage": "/games/vratuvatu_ryadovogo_vasyu/assets/preview.svg",
+      "genre": "СТЕЛС-ЕКСТРАКШН",
       "year": "2026",
       "players": "1P",
       "accentColor": "#f59e0b",
       "shellColor": "#222428",
-      "description": "Вася знову затільтував. Але світ не проіснує без свого героя. Поїдь в Галич і поверни Васю з тільта.",
+      "description": "Вася знову затільтував. Але світ не проіснує без свого героя. Поїдь в Галич, збери свинко-терапію, хапай пиво і поверни Васю на останній дизель.",
+      "controls": "WASD / Стрілки • E (Дія) • Q / ЛКМ (Кидок) • C (Дзвінок мамі) • M (Звук)",
+      "badge": "ВИПУСК #04",
       "published": true
     }
   ]

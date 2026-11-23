@@ -1,0 +1,1056 @@
+:root {
+  --bg-deep: #141311;
+  --gta-panel: rgba(23, 22, 20, 0.94);
+  --gta-panel-alt: #22201c;
+  --gta-border: #575248;
+  --gta-amber: #e59a24;
+  --gta-cream: #d6b87c;
+  --gta-red: #b83527;
+  --gta-olive: #7a9e4b;
+  --gta-plum: #8d6b99;
+  --text-main: #ede6d6;
+  --text-muted: #9b9384;
+  --font-display: Impact, 'Arial Black', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+}
+
+.game-root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#game-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  cursor: crosshair;
+}
+
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.16) 3px,
+      rgba(0, 0, 0, 0.16) 4px
+    ),
+    radial-gradient(circle at center, transparent 62%, rgba(10, 9, 8, 0.62) 100%);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ================= GTA 2 INDUSTRIAL HUD ================= */
+.hud-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  padding: 12px;
+  z-index: 15;
+}
+
+.gta-box {
+  background: var(--gta-panel);
+  border: 2px solid var(--gta-border);
+  box-shadow: 4px 4px 0 #090807, inset 0 0 0 1px rgba(214, 184, 124, 0.15);
+  pointer-events: auto;
+}
+
+.gta-box-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.gta-tag {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--gta-amber);
+}
+
+.gta-num {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--gta-cream);
+}
+
+.hud-top-left {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 278px;
+  padding: 10px 12px;
+  border-color: var(--gta-amber);
+}
+
+.tilt-bar-wrap {
+  width: 100%;
+  height: 14px;
+  background: #0d0c0a;
+  border: 2px solid #444038;
+  padding: 2px;
+}
+
+.tilt-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--gta-olive) 0%, var(--gta-amber) 55%, var(--gta-red) 90%);
+  transition: width 0.1s linear;
+}
+
+.hud-vasya-state {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gta-cream);
+  text-transform: uppercase;
+}
+
+.hud-subrow {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.pig-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: var(--gta-panel-alt);
+  border: 2px solid var(--gta-amber);
+  color: var(--gta-amber);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.hud-buffs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.buff-pill {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border: 1px solid var(--gta-cream);
+  background: #2b2722;
+  color: var(--gta-cream);
+}
+
+.buff-pill.mom {
+  border-color: var(--gta-olive);
+  background: #222e18;
+  color: #cbe3a4;
+}
+
+.buff-pill.pig {
+  border-color: var(--gta-amber);
+  background: #332512;
+  color: #f6d38b;
+}
+
+/* Top Center */
+.hud-top-center {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 18px;
+  min-width: 340px;
+  text-align: center;
+  border-color: var(--gta-red);
+}
+
+.timer-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+}
+
+.timer-tag {
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--gta-red);
+  letter-spacing: 0.1em;
+}
+
+.hud-timer {
+  font-family: var(--font-display);
+  font-size: 30px;
+  letter-spacing: 0.08em;
+  color: var(--gta-amber);
+  text-shadow: 2px 2px 0 #000;
+}
+
+.hud-timer.urgent {
+  color: var(--gta-red);
+  animation: gtaBlink 0.55s steps(2) infinite;
+}
+
+@keyframes gtaBlink {
+  0% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.hud-objective {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--gta-olive);
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.compass-row {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 10px;
+  background: #0d0c0a;
+  border: 1px solid #444038;
+  font-size: 12px;
+}
+
+.compass-arrow {
+  display: inline-block;
+  color: var(--gta-olive);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.compass-dist {
+  color: var(--gta-amber);
+  font-weight: 800;
+}
+
+/* Top Right */
+.hud-top-right {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.minimap-card {
+  padding: 8px;
+  border-color: var(--gta-olive);
+}
+
+.gta-zone {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--gta-olive);
+  text-transform: uppercase;
+}
+
+#minimap-canvas {
+  display: block;
+  background: #1a1917;
+  border: 2px solid #444038;
+  image-rendering: pixelated;
+}
+
+/* Nokia Mom Phone */
+.mom-phone-popup {
+  width: 262px;
+  background: #1b2217;
+  border: 3px solid var(--gta-olive);
+  box-shadow: 5px 5px 0 #000;
+  padding: 10px 12px;
+  pointer-events: auto;
+}
+
+.mom-phone-popup.success {
+  border-color: #93c456;
+  background: #233219;
+}
+
+.mom-phone-popup.fail {
+  border-color: var(--gta-amber);
+  background: #282218;
+}
+
+.phone-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(122, 158, 75, 0.35);
+  padding-bottom: 4px;
+}
+
+.phone-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--gta-olive);
+  animation: gtaBlink 0.4s steps(2) infinite;
+}
+
+.phone-title {
+  font-size: 11.5px;
+  font-weight: 900;
+  color: #cbe3a4;
+}
+
+.phone-status {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--gta-amber);
+}
+
+.phone-body {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text-main);
+}
+
+/* Bottom Left: Retro Radio Chat */
+.tg-chat-box {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  width: 340px;
+  max-height: 205px;
+  display: flex;
+  flex-direction: column;
+  border-color: var(--gta-border);
+}
+
+.tg-chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: #22201c;
+  border-bottom: 2px solid var(--gta-border);
+}
+
+.tg-chat-title {
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--gta-amber);
+}
+
+.tg-online {
+  font-size: 10px;
+  color: var(--gta-olive);
+  font-weight: 900;
+}
+
+.tg-chat-messages {
+  padding: 7px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow-y: auto;
+  max-height: 168px;
+}
+
+.tg-msg {
+  background: #1f1d1a;
+  border-left: 3px solid var(--gta-amber);
+  padding: 4px 7px;
+  font-size: 11.5px;
+  line-height: 1.32;
+}
+
+.tg-msg.vasya-quote {
+  border-left-color: var(--gta-plum);
+  background: #28212b;
+}
+
+.tg-msg.alert {
+  border-left-color: var(--gta-red);
+  background: #2e1d1b;
+}
+
+.tg-msg-sender {
+  font-weight: 900;
+  color: var(--gta-amber);
+  margin-right: 5px;
+}
+
+.tg-msg.vasya-quote .tg-msg-sender {
+  color: #cca8d8;
+}
+
+/* Bottom Center */
+.hud-bottom-center {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-prompt {
+  padding: 6px 14px;
+  background: #141311;
+  border: 2px solid var(--gta-amber);
+  color: var(--gta-amber);
+  font-size: 12.5px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  box-shadow: 3px 3px 0 #000;
+}
+
+.controls-dock {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.stamina-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stamina-label {
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--gta-cream);
+}
+
+.stamina-bar {
+  flex: 1;
+  height: 8px;
+  background: #0d0c0a;
+  border: 1px solid #444038;
+}
+
+.stamina-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--gta-olive);
+}
+
+.dock-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inventory-slots {
+  display: flex;
+  gap: 6px;
+}
+
+.inv-slot {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: #191815;
+  border: 2px solid #4a463f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.inv-slot.active {
+  border-color: var(--gta-amber);
+  background: #2d2415;
+  box-shadow: inset 0 0 0 1px var(--gta-amber);
+}
+
+.inv-slot-key {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
+
+.inv-slot-icon {
+  font-size: 21px;
+}
+
+.inv-slot-count {
+  position: absolute;
+  bottom: 1px;
+  right: 4px;
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--gta-amber);
+}
+
+.ability-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.gta-btn {
+  position: relative;
+  height: 48px;
+  padding: 0 11px;
+  background: #22201c;
+  border: 2px solid var(--gta-amber);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.gta-btn.mom-btn {
+  border-color: var(--gta-olive);
+  color: #cbe3a4;
+}
+
+.cooldown-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 11, 10, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gta-red);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+kbd {
+  display: inline-block;
+  padding: 1px 5px;
+  background: #0d0c0a;
+  border: 1px solid #575248;
+  color: var(--gta-amber);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+/* ================= GTA 2 MENU SCREEN ================= */
+.overlay-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: linear-gradient(90deg, rgba(16, 15, 13, 0.9) 0%, rgba(16, 15, 13, 0.72) 60%, rgba(16, 15, 13, 0.86) 100%);
+  z-index: 30;
+}
+
+.gta-menu-shell {
+  width: 100%;
+  max-width: 880px;
+  background: rgba(21, 20, 17, 0.95);
+  border: 3px solid var(--gta-amber);
+  box-shadow: 10px 10px 0 #080706;
+  padding: 24px 28px;
+}
+
+.gta-stamp {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: var(--gta-red);
+  margin-bottom: 10px;
+}
+
+.gta-logo {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 58px);
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  text-shadow: 4px 4px 0 #000000;
+}
+
+.gta-logo .gta-sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.25em;
+  color: var(--gta-olive);
+  margin-bottom: 6px;
+}
+
+.gta-logo em {
+  font-style: normal;
+  color: var(--gta-amber);
+}
+
+.gta-dossier {
+  border-left: 4px solid var(--gta-red);
+  background: rgba(12, 11, 10, 0.7);
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #d6cfc2;
+  margin-bottom: 16px;
+}
+
+.gta-dossier p {
+  margin: 0 0 6px;
+}
+
+.gta-dossier p:last-child {
+  margin-bottom: 0;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--gta-amber);
+  margin-bottom: 8px;
+}
+
+.difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.diff-card {
+  text-align: left;
+  padding: 10px 12px;
+  background: #1c1a17;
+  border: 2px solid #4a463f;
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+.diff-card:hover {
+  border-color: var(--gta-amber);
+}
+
+.diff-card.selected {
+  border-color: var(--gta-amber);
+  background: #2c2313;
+  box-shadow: 4px 4px 0 #000;
+}
+
+.diff-stars {
+  color: var(--gta-amber);
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.diff-name {
+  font-size: 13px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.diff-desc {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
+.gta-menu-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.gta-cta {
+  padding: 12px 22px;
+  background: var(--gta-amber);
+  border: 2px solid #f7e6c4;
+  color: #141311;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #000000;
+}
+
+.gta-cta:hover {
+  background: #f1ad3d;
+  transform: translate(-1px, -1px);
+}
+
+.gta-secondary-btn {
+  padding: 11px 15px;
+  background: #22201c;
+  border: 2px solid #575248;
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 #000000;
+}
+
+.gta-secondary-btn:hover {
+  border-color: var(--gta-amber);
+  color: var(--gta-amber);
+}
+
+.controls-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding: 8px 12px;
+  background: #0f0e0c;
+  border: 1px solid #444038;
+  font-size: 11.5px;
+  color: #d6cfc2;
+}
+
+/* ================= INTRO SLIDESHOW ================= */
+.intro-frame {
+  width: 100%;
+  max-width: 920px;
+  background: #171614;
+  border: 3px solid var(--gta-amber);
+  box-shadow: 10px 10px 0 #000;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.intro-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.intro-tag {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--gta-olive);
+  letter-spacing: 0.1em;
+}
+
+#intro-canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 2px solid #444038;
+  background: #12110f;
+  image-rendering: pixelated;
+}
+
+.intro-caption-box {
+  background: #1f1d1a;
+  border: 2px solid #444038;
+  padding: 12px 14px;
+}
+
+.intro-caption {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-main);
+  min-height: 44px;
+}
+
+.intro-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.intro-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.intro-dot {
+  width: 12px;
+  height: 12px;
+  background: #3a3631;
+  border: 1px solid #6b655b;
+}
+
+.intro-dot.active {
+  background: var(--gta-amber);
+  border-color: var(--text-main);
+}
+
+/* ================= MODALS & ENDINGS ================= */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 9, 8, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 40;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 650px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: #171614;
+  border: 3px solid var(--gta-amber);
+  box-shadow: 8px 8px 0 #000;
+  padding: 18px 20px;
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.modal-head h2 {
+  margin: 0;
+  font-size: 19px;
+  color: var(--gta-amber);
+}
+
+.modal-close {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #575248;
+  background: #22201c;
+  color: var(--text-main);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.modal-sub {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.dict-list,
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dict-item {
+  padding: 10px 12px;
+  background: #22201c;
+  border-left: 4px solid var(--gta-plum);
+}
+
+.dict-phrase {
+  font-size: 14px;
+  font-weight: 900;
+  color: #e4cfe9;
+  margin-bottom: 3px;
+}
+
+.dict-meaning {
+  font-size: 12px;
+  color: #d6cfc2;
+}
+
+.ach-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #1f1d1a;
+  border: 1px solid #444038;
+  opacity: 0.6;
+}
+
+.ach-item.unlocked {
+  opacity: 1;
+  border-color: var(--gta-amber);
+  background: #2c2313;
+}
+
+.ach-icon {
+  font-size: 22px;
+  width: 32px;
+  text-align: center;
+}
+
+.ach-title {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--gta-amber);
+}
+
+.ach-desc {
+  font-size: 11.5px;
+  color: #d6cfc2;
+}
+
+.ending-card {
+  width: 100%;
+  max-width: 600px;
+  background: #171614;
+  border: 3px solid var(--gta-amber);
+  box-shadow: 10px 10px 0 #000;
+  padding: 22px 24px;
+}
+
+.ending-card.defeat {
+  border-color: var(--gta-red);
+}
+
+.ending-card.secret {
+  border-color: var(--gta-olive);
+}
+
+.ending-badge {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--gta-amber);
+  margin-bottom: 6px;
+}
+
+.ending-title {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  letter-spacing: 0.04em;
+}
+
+.ending-verdict {
+  padding: 10px 14px;
+  background: #27202b;
+  border: 2px solid var(--gta-plum);
+  margin-bottom: 14px;
+}
+
+.ending-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stat-box {
+  background: #22201c;
+  border: 1px solid #444038;
+  padding: 8px 10px;
+}
+
+.stat-label {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.tg-defeat-window {
+  background: #1d1b18;
+  border: 2px solid #575248;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.tg-defeat-head {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #444038;
+}
+
+.tg-last-seen {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.tg-defeat-msg {
+  background: #292622;
+  padding: 7px 10px;
+  margin-bottom: 5px;
+  max-width: 240px;
+  font-size: 13px;
+}
+
+.ending-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ================= TOASTS ================= */
+.toast-container {
+  position: absolute;
+  top: 88px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.ach-toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  background: #171614;
+  border: 2px solid var(--gta-amber);
+  box-shadow: 4px 4px 0 #000;
+}
+
+@media (max-width: 820px) {
+  .difficulty-grid {
+    grid-template-columns: 1fr;
+  }
+  .tg-chat-box {
+    width: 250px;
+  }
+}

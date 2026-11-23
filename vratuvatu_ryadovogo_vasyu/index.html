@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GTA: Галич — Врятувати рядового Васю</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="game-root" class="game-root">
+      <div class="crt-overlay" aria-hidden="true"></div>
+      <canvas id="game-canvas"></canvas>
+
+      <!-- GTA 2 HUD LAYER -->
+      <div id="hud-layer" class="hud-layer hidden">
+        <!-- TOP LEFT: RESPECT / TILT-O-METER + PIGS -->
+        <div class="gta-box hud-top-left">
+          <div class="gta-box-head">
+            <span class="gta-tag">ВАСЯ // ТІЛЬТ</span>
+            <span id="hud-tilt-val" class="gta-num">0%</span>
+          </div>
+          <div class="tilt-bar-wrap">
+            <div id="hud-tilt-fill" class="tilt-bar-fill"></div>
+          </div>
+          <div id="hud-vasya-state" class="hud-vasya-state">СТАТУС: БЕРЛОГА</div>
+
+          <div class="hud-subrow">
+            <div class="pig-badge" title="Морські свинки у загоні">
+              <span>🐹</span>
+              <span id="hud-pig-count">0/3</span>
+            </div>
+            <div id="hud-buffs" class="hud-buffs"></div>
+          </div>
+        </div>
+
+        <!-- TOP CENTER: MISSION TIMER + OBJECTIVE + COMPASS -->
+        <div class="gta-box hud-top-center">
+          <div class="timer-row">
+            <span class="timer-tag">ДИЗЕЛЬ ЧЕРЕЗ</span>
+            <span id="hud-timer" class="hud-timer">03:50</span>
+          </div>
+          <div id="hud-objective" class="hud-objective">ФАЗА 1: РОЗШУКАЙ СЛІДИ ВАСІ (0/3)</div>
+          <div class="compass-row">
+            <span id="hud-compass-arrow" class="compass-arrow">▲</span>
+            <span id="hud-compass-dist" class="compass-dist">0 М</span>
+          </div>
+        </div>
+
+        <!-- TOP RIGHT: GTA 2 RADAR + NOKIA MOM PHONE -->
+        <div class="hud-top-right">
+          <div class="gta-box minimap-card">
+            <div class="gta-box-head">
+              <span class="gta-tag">РАДАР</span>
+              <span id="hud-zone-name" class="gta-zone">ВОКЗАЛ</span>
+            </div>
+            <canvas id="minimap-canvas" width="188" height="150"></canvas>
+          </div>
+
+          <div id="mom-phone-popup" class="mom-phone-popup hidden">
+            <div class="phone-header">
+              <span class="phone-dot"></span>
+              <span class="phone-title">NOKIA // МАМА ВАСІ</span>
+              <span id="mom-phone-status" class="phone-status">ВИКЛИК</span>
+            </div>
+            <div id="mom-phone-body" class="phone-body">ГУДКИ 425 HZ...</div>
+          </div>
+        </div>
+
+        <!-- BOTTOM LEFT: RETRO RADIO / KENT CHAT -->
+        <div class="gta-box hud-bottom-left tg-chat-box">
+          <div class="tg-chat-header">
+            <span class="tg-chat-title">📻 РАЦІЯ КЕНТІВ // ГАЛИЧ</span>
+            <span class="tg-online">7 В ЕФІРІ</span>
+          </div>
+          <div id="tg-chat-messages" class="tg-chat-messages"></div>
+        </div>
+
+        <!-- BOTTOM CENTER: STAMINA + ARSENAL SLOTS + ABILITIES -->
+        <div class="hud-bottom-center">
+          <div id="hud-action-prompt" class="action-prompt hidden"></div>
+
+          <div class="gta-box controls-dock">
+            <div class="stamina-wrap">
+              <span class="stamina-label">СПРИНТ</span>
+              <div class="stamina-bar">
+                <div id="hud-stamina-fill" class="stamina-fill"></div>
+              </div>
+            </div>
+
+            <div class="dock-main">
+              <div id="hud-inventory" class="inventory-slots"></div>
+
+              <div class="ability-buttons">
+                <button id="btn-mom-call" class="gta-btn mom-btn" title="Дзвінок мамі Васі (C)">
+                  <span>📞 МАМА</span>
+                  <kbd>C</kbd>
+                  <span id="mom-cooldown-overlay" class="cooldown-overlay hidden"></span>
+                </button>
+                <button id="btn-mute" class="gta-btn mute-btn" title="Звук (M)">
+                  <span id="mute-icon">🔊</span>
+                  <kbd>M</kbd>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 1: GTA 2 MAIN MENU / BRIEFING -->
+      <section id="screen-briefing" class="overlay-screen active">
+        <div class="gta-menu-shell">
+          <div class="gta-menu-left">
+            <div class="gta-stamp">● РАЙОН: ГАЛИЧ-СІТІ // ДЕНЬ 31-Й ВЕЛИКОГО ІГНОРУ</div>
+            <h1 class="gta-logo">
+              <span class="gta-sub">GRAND THEFT VASYA II</span>
+              ВРЯТУВАТИ<br />РЯДОВОГО <em>ВАСЮ</em>
+            </h1>
+
+            <div class="gta-dossier">
+              <p>
+                <strong>ЗВЕДЕННЯ ВІД КЕНТІВ (ОЛЕГ, МАКСИМ, ВІТАЛІК, ТАРАС, ЗАХАР, ДМИТРО, АНДРІЙ):</strong>
+                Останнє повідомлення Васі в чаті: <strong>«Хз»</strong> і одна сіра галочка ✓.
+              </p>
+              <p>
+                Вася заліг на дно в панельці на околиці Галича, тільт пробив стратосферу, а спілкування перейшло виключно на <strong>василівку</strong>. Хапай тактичне пиво в АТБ, шукай морських свинок у парку та тягни його на останній дизель!
+              </p>
+            </div>
+
+            <div class="difficulty-section">
+              <div class="section-label">РІВЕНЬ РОЗШУКУ (СКЛАДНІСТЬ):</div>
+              <div id="difficulty-cards" class="difficulty-grid">
+                <button type="button" class="diff-card" data-diff="easy">
+                  <div class="diff-stars">★☆☆</div>
+                  <div class="diff-name">ХЗ (ЛЕГКО)</div>
+                  <div class="diff-desc">4:30 до дизеля, слабкий тільт, світлі вулиці.</div>
+                </button>
+                <button type="button" class="diff-card selected" data-diff="normal">
+                  <div class="diff-stars">★★☆</div>
+                  <div class="diff-name">БЛЯ АНЛАК (НОРМА)</div>
+                  <div class="diff-desc">3:50 часу, стандартний баланс патрулів.</div>
+                </button>
+                <button type="button" class="diff-card" data-diff="hard">
+                  <div class="diff-stars">★★★</div>
+                  <div class="diff-name">БЛЯ АНАЛ (ХАРДКОР)</div>
+                  <div class="diff-desc">3:15 часу, люті дедлайни й вечірній морок.</div>
+                </button>
+              </div>
+            </div>
+
+            <div class="gta-menu-actions">
+              <button id="btn-start-mission" class="gta-cta">
+                [ &gt;&gt; ПОЧАТИ ЕВАКУАЦІЮ ]
+              </button>
+              <button id="btn-open-dict" class="gta-secondary-btn">
+                📖 СЛОВНИК ВАСИЛІВКИ
+              </button>
+              <button id="btn-open-achievements" class="gta-secondary-btn">
+                🏆 АЧІВКИ (<span id="menu-ach-count">0/7</span>)
+              </button>
+            </div>
+
+            <div class="controls-strip">
+              <span><kbd>WASD</kbd> ХІД</span>
+              <span><kbd>SHIFT</kbd> СПРИНТ</span>
+              <span><kbd>E</kbd> СВИНКА / ВАСЯ</span>
+              <span><kbd>Q</kbd> / <kbd>ЛКМ</kbd> КИДОК</span>
+              <span><kbd>C</kbd> МАМА</span>
+              <span><kbd>M</kbd> МУЗИКА</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: INTRO SLIDESHOW (PREHISTORY) -->
+      <section id="screen-intro" class="overlay-screen hidden">
+        <div class="intro-frame">
+          <div class="intro-top-bar">
+            <span id="intro-slide-tag" class="intro-tag">КАДР 1 / 4 // АРХІВ ГАЛИЧА</span>
+            <button id="btn-skip-intro" class="gta-secondary-btn">ПРОПУСТИТИ [SPACE]</button>
+          </div>
+          <canvas id="intro-canvas" width="900" height="460"></canvas>
+          <div class="intro-caption-box">
+            <p id="intro-caption" class="intro-caption"></p>
+            <div class="intro-footer">
+              <div id="intro-dots" class="intro-dots"></div>
+              <button id="btn-next-slide" class="gta-cta">ДАЛІ →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODAL: VASYLIVKA DICTIONARY -->
+      <div id="modal-dict" class="modal-backdrop hidden">
+        <div class="modal-card">
+          <div class="modal-head">
+            <h2>📖 СЛОВНИК ВАСИЛІВКИ</h2>
+            <button class="modal-close" data-close="modal-dict">✕</button>
+          </div>
+          <p class="modal-sub">
+            Тактичний розмовник загону. Кожне слово Васі — концентрат філософії Галича.
+          </p>
+          <div id="dict-list" class="dict-list"></div>
+        </div>
+      </div>
+
+      <!-- MODAL: ACHIEVEMENTS -->
+      <div id="modal-achievements" class="modal-backdrop hidden">
+        <div class="modal-card">
+          <div class="modal-head">
+            <h2>🏆 ДОСЯГНЕННЯ ОПЕРАЦІЇ</h2>
+            <button class="modal-close" data-close="modal-achievements">✕</button>
+          </div>
+          <p class="modal-sub">Зберігається у локальному профілі браузера.</p>
+          <div id="achievements-list" class="achievements-list"></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: ENDING -->
+      <section id="screen-ending" class="overlay-screen hidden">
+        <div id="ending-card" class="ending-card"></div>
+      </section>
+
+      <!-- ACHIEVEMENT TOAST CONTAINER -->
+      <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
